@@ -125,20 +125,29 @@ account ID が個人アカウントであることを確認してから着手す
 **Python のバージョンは落とし穴。** デフォルトの `python3` は 3.14.7 だが、CDK が依存する jsii の 3.14 対応は不確実。
 venv には `/opt/homebrew/bin/python3.13` を使う。
 
+**conda を使っている場合。** シェルに `(base)` が出ているなら `python3` は conda のものを指す。
+このプロジェクト用に conda 環境を新規作成する必要はない。`conda deactivate` してから
+`/opt/homebrew/bin/python3.13 -m venv .venv` で venv を作る。CDK プロジェクトでは venv が標準。
+
+**Docker は Colima でも可。** Docker Desktop の代わりに Colima を使っても、
+フェーズ 4 の `docker build` / `docker run` はそのまま動く。注意点：
+
+- Docker Desktop と同時に起動しない（ソケットが競合する）
+- Fargate は ARM64 で動かすので、Apple Silicon なら `colima start --arch aarch64` でそのままビルドできる
+- CDK の Docker バンドリングを使う場合は、`docker context ls` で接続先が colima になっていることを確認する
+
 ### 3.4 リポジトリとドキュメントの配置
 
 自分のリポジトリをゼロから作る。初期構成はこの程度で十分：
 
 ```
-my-aws-catalog/
+sample_aws_dev_project/
 ├─ README.md            ← この計画書
 ├─ .gitignore           ← .venv, cdk.out, __pycache__ を除外
 ├─ app.py               ← フェーズ 0 で cdk init が生成
 └─ docs/
    └─ troubleshooting.md  ← 詰まった記録を貯めていく
 ```
-
-中国語版の計画書はリポジトリ外にローカル保持する。
 
 フェーズごとにブランチを切って進め、完了時に main へマージすると、後から学習の軌跡を辿れる。
 
@@ -162,7 +171,7 @@ AWS Billing コンソールで **月額 $10** の Budget アラートをメー�
 - [ ] `python3.13` で venv を作り、`aws-cdk-lib`、`pytest`、`moto`、`boto3` を入れる
 - [ ] `npm install -g aws-cdk` で CDK CLI を入れ、`cdk --version` で確認
 - [ ] `cdk init app --language python` で自分のプロジェクトを初期化
-- [ ] `.gitignore` を書く（`.venv`、`cdk.out`、`__pycache__`、`PLAN.zh.md`）
+- [ ] `.gitignore` を書く（`.venv`、`cdk.out`、`__pycache__`）
 - [ ] 生成された雛形のファイルを 1 本ずつ読み、役割を説明できるようにする
 - [ ] 空の Stack で `cdk synth` を実行し、出力される CloudFormation を読む
 - [ ] 最初のコミット

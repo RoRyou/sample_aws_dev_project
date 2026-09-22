@@ -1,0 +1,15 @@
+# ローカル専用（git には上げない）
+PLAN.zh.md
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# CDK
+cdk.out/
+.cdk.staging/
+
+# OS
+.DS_Store
